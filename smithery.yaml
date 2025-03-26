@@ -1,0 +1,45 @@
+# Configuração do Smithery para MCP-Server-TESS
+version: '1'
+
+# Configuração de build
+build:
+  dockerfile: Dockerfile
+  context: .
+  
+# Configuração de STDIO para MCP
+startCommand:
+  type: stdio
+  configSchema: {
+    "type": "object",
+    "required": ["tessApiKey"],
+    "properties": {
+      "tessApiKey": {
+        "type": "string",
+        "description": "Chave de API da plataforma TESS"
+      }
+    }
+  }
+  commandFunction: |
+    function(config) {
+      return {
+        command: "node",
+        args: ["build/index.js"],
+        env: {
+          TESS_API_KEY: config.tessApiKey
+        }
+      };
+    }
+  
+# Portas expostas
+ports:
+  - 3000:3000
+
+# Saúde do serviço
+health:
+  path: /health
+  port: 3000
+  
+# Configuração de serviço
+service:
+  name: mcp-server-tess
+  description: "MCP Server para integração com a API TESS"
