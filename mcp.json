@@ -1,0 +1,164 @@
+{
+  "name": "mcp-server-tess",
+  "version": "1.0.0",
+  "description": "Servidor MCP para integração com a API TESS",
+  "author": "Diego Fornalha",
+  "license": "MIT",
+  "features": {
+    "stdio": true
+  },
+  "runtime": {
+    "nodejs": {
+      "entry": "./index.js"
+    }
+  },
+  "config": {
+    "schema": {
+      "type": "object",
+      "required": ["tessApiKey"],
+      "properties": {
+        "tessApiKey": {
+          "type": "string",
+          "description": "Chave de API da plataforma TESS"
+        }
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "listar_agentes_tess",
+      "description": "Lista todos os agentes disponíveis na API TESS",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "number", "description": "Número da página (padrão: 1)" },
+          "per_page": { "type": "number", "description": "Itens por página (padrão: 15, máx: 100)" }
+        }
+      }
+    },
+    {
+      "name": "obter_agente_tess",
+      "description": "Obtém detalhes de um agente específico",
+      "parameters": {
+        "type": "object",
+        "required": ["agent_id"],
+        "properties": {
+          "agent_id": { "type": "string", "description": "ID do agente a ser consultado" }
+        }
+      }
+    },
+    {
+      "name": "executar_agente_tess",
+      "description": "Executa um agente com mensagens específicas",
+      "parameters": {
+        "type": "object",
+        "required": ["agent_id", "messages"],
+        "properties": {
+          "agent_id": { "type": "string", "description": "ID do agente a ser executado" },
+          "temperature": { "type": "string", "description": "Temperatura para geração (0-1)" },
+          "model": { "type": "string", "description": "Modelo a ser usado" },
+          "messages": { 
+            "type": "array", 
+            "description": "Mensagens para o agente (formato chat)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          },
+          "tools": { "type": "string", "description": "Ferramentas a serem habilitadas" },
+          "file_ids": { 
+            "type": "array", 
+            "description": "IDs dos arquivos a serem anexados",
+            "items": { "type": "number" }
+          },
+          "waitExecution": { "type": "boolean", "description": "Esperar pela execução completa" }
+        }
+      }
+    },
+    {
+      "name": "listar_arquivos_agente_tess",
+      "description": "Lista todos os arquivos associados a um agente",
+      "parameters": {
+        "type": "object",
+        "required": ["agent_id"],
+        "properties": {
+          "agent_id": { "type": "string", "description": "ID do agente" },
+          "page": { "type": "number", "description": "Número da página (padrão: 1)" },
+          "per_page": { "type": "number", "description": "Itens por página (padrão: 15, máx: 100)" }
+        }
+      }
+    },
+    {
+      "name": "vincular_arquivo_agente_tess",
+      "description": "Vincula um arquivo existente a um agente",
+      "parameters": {
+        "type": "object",
+        "required": ["agent_id", "file_id"],
+        "properties": {
+          "agent_id": { "type": "string", "description": "ID do agente" },
+          "file_id": { "type": "number", "description": "ID do arquivo a ser vinculado" }
+        }
+      }
+    },
+    {
+      "name": "remover_arquivo_agente_tess",
+      "description": "Remove o vínculo de um arquivo com um agente",
+      "parameters": {
+        "type": "object",
+        "required": ["agent_id", "file_id"],
+        "properties": {
+          "agent_id": { "type": "string", "description": "ID do agente" },
+          "file_id": { "type": "number", "description": "ID do arquivo a ser removido" }
+        }
+      }
+    },
+    {
+      "name": "listar_arquivos_tess",
+      "description": "Lista todos os arquivos disponíveis",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "number", "description": "Número da página (padrão: 1)" },
+          "per_page": { "type": "number", "description": "Itens por página (padrão: 15, máx: 100)" }
+        }
+      }
+    },
+    {
+      "name": "obter_arquivo_tess",
+      "description": "Obtém detalhes de um arquivo específico",
+      "parameters": {
+        "type": "object",
+        "required": ["file_id"],
+        "properties": {
+          "file_id": { "type": "number", "description": "ID do arquivo a ser consultado" }
+        }
+      }
+    },
+    {
+      "name": "enviar_arquivo_tess",
+      "description": "Envia um novo arquivo para a plataforma TESS",
+      "parameters": {
+        "type": "object",
+        "required": ["file_path"],
+        "properties": {
+          "file_path": { "type": "string", "description": "Caminho local do arquivo a ser enviado" },
+          "purpose": { "type": "string", "description": "Propósito do arquivo (ex: 'assistants')" }
+        }
+      }
+    },
+    {
+      "name": "excluir_arquivo_tess",
+      "description": "Exclui um arquivo da plataforma TESS",
+      "parameters": {
+        "type": "object",
+        "required": ["file_id"],
+        "properties": {
+          "file_id": { "type": "number", "description": "ID do arquivo a ser excluído" }
+        }
+      }
+    }
+  ]
+}
